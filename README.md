@@ -131,9 +131,16 @@ runner:
 ## Commands
 
 ```bash
+ansible-galaxy collection install -r collections/requirements.yml
 make syntax-check
 make provision
 ```
+
+## Dependencies
+
+This playbook uses the following Ansible collection:
+
+- `ansible.posix`
 
 ## Security Notes
 

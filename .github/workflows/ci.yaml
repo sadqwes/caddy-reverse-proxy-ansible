@@ -22,5 +22,8 @@ jobs:
       - name: Install Ansible
         run: pip install ansible-core
 
+      - name: Install Ansible collections
+        run: ansible-galaxy collection install -r collections/requirements.yml
+
       - name: Syntax check playbook
         run: ansible-playbook -i inventory/hosts.example.yml playbook.yml --syntax-check

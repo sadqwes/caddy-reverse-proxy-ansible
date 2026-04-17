@@ -13,6 +13,10 @@ This repository prepares a host for:
 - SSH key-based access
 - Basic filesystem layout used by the proxy deployment workflow
 
+## Related Repositories
+
+- [caddy-reverse-proxy-automation](https://github.com/sadqwes/caddy-reverse-proxy-automation) manages generated Caddy configuration, deployment workflow, health checks, and monitoring for the server provisioned by this repository.
+
 ## Why This Project
 
 I wanted the Caddy proxy repository and the server provisioning logic to live separately:

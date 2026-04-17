@@ -1,0 +1,22 @@
+inventory/hosts.yml
+group_vars/all.yml
+
+# ssh keys
+*.pem
+*.key
+*.pub
+
+# ansible artifacts
+.retry
+*.retry
+
+# env
+.env
+
+# IDE
+.vscode/
+.idea/
+.DS_Store
+
+# logs
+*.log

@@ -1,0 +1,6 @@
+- name: Provision Caddy Node
+  hosts: all
+  become: true
+
+  roles:
+    - caddy-node

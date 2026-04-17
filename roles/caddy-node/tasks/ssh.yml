@@ -1,0 +1,40 @@
+- name: Ensure root .ssh directory exists
+  file:
+    path: /root/.ssh
+    state: directory
+    mode: '0700'
+
+- name: Add SSH public key to root
+  authorized_key:
+    user: root
+    key: "{{ ssh_public_key }}"
+
+- name: Disable password authentication
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^PasswordAuthentication'
+    line: 'PasswordAuthentication no'
+
+- name: Disable PAM authentication
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^UsePAM'
+    line: 'UsePAM no'
+
+- name: Restrict root login to key only
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^PermitRootLogin'
+    line: 'PermitRootLogin prohibit-password'
+
+- name: Disable SSH access for caddy user
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^DenyUsers'
+    line: 'DenyUsers caddy'
+    create: yes
+
+- name: Restart SSH service
+  systemd:
+    name: ssh
+    state: restarted

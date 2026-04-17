@@ -1,0 +1,6 @@
+ssh_public_key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIExamplePublicKeyReplaceMe user@example.com"
+
+runner:
+  repo_url: "https://github.com/your-user/your-repo"
+  token: "REPLACE_WITH_GITHUB_RUNNER_REGISTRATION_TOKEN"
+  name: "caddy-node-1"

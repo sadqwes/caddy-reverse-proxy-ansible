@@ -1,0 +1,26 @@
+name: Validate Ansible Playbook
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  syntax-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Ansible
+        run: pip install ansible-core
+
+      - name: Syntax check playbook
+        run: ansible-playbook -i inventory/hosts.example.yml playbook.yml --syntax-check

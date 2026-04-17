@@ -1,0 +1,8 @@
+base_packages:
+  - curl
+  - git
+  - jq
+  - ufw
+
+runner_version: "2.333.1"
+runner_dir: "/opt/actions-runner"

@@ -1,0 +1,50 @@
+- name: Update apt cache
+  apt:
+    update_cache: yes
+
+- name: Install base packages
+  apt:
+    name: "{{ base_packages }}"
+    state: present
+
+- name: Install Caddy
+  apt:
+    name: caddy
+    state: present
+
+- name: Ensure Caddy is enabled and running
+  systemd:
+    name: caddy
+    enabled: true
+    state: started
+
+- name: Ensure caddy user exists
+  user:
+    name: caddy
+    system: yes
+    shell: /usr/sbin/nologin
+    create_home: yes
+
+- name: Ensure caddy home exists
+  file:
+    path: /home/caddy
+    state: directory
+    owner: caddy
+    group: caddy
+    mode: '0700'
+
+- name: Create Caddy log directory
+  file:
+    path: /var/log/caddy
+    state: directory
+    owner: caddy
+    group: caddy
+    mode: '0755'
+
+- name: Create runner directory
+  file:
+    path: "{{ runner_dir }}"
+    state: directory
+    owner: caddy
+    group: caddy
+    mode: '0755'

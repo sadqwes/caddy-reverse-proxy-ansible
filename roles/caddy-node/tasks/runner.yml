@@ -1,0 +1,67 @@
+- name: Check if runner already configured
+  stat:
+    path: "{{ runner_dir }}/.runner"
+  register: runner_configured
+
+- name: Create runner directory
+  file:
+    path: "{{ runner_dir }}"
+    state: directory
+    owner: caddy
+    group: caddy
+    mode: '0755'
+
+- name: Download GitHub Actions Runner
+  get_url:
+    url: "https://github.com/actions/runner/releases/download/v{{ runner_version }}/actions-runner-linux-x64-{{ runner_version }}.tar.gz"
+    dest: "{{ runner_dir }}/runner.tar.gz"
+    mode: '0644'
+  when: not runner_configured.stat.exists
+
+- name: Extract runner
+  unarchive:
+    src: "{{ runner_dir }}/runner.tar.gz"
+    dest: "{{ runner_dir }}"
+    remote_src: yes
+  when: not runner_configured.stat.exists
+
+- name: Set runner directory ownership
+  file:
+    path: "{{ runner_dir }}"
+    owner: caddy
+    group: caddy
+    recurse: yes
+
+- name: Configure runner
+  command: >
+    ./config.sh
+    --url {{ runner.repo_url }}
+    --token {{ runner.token }}
+    --name {{ runner.name }}
+    --unattended
+  args:
+    chdir: "{{ runner_dir }}"
+  when: not runner_configured.stat.exists
+  become: true
+  become_user: caddy
+  no_log: true
+
+- name: Allow runner sudo without password
+  copy:
+    dest: /etc/sudoers.d/caddy-runner
+    content: |
+      caddy ALL=(ALL) NOPASSWD: ALL
+    mode: '0440'
+    validate: /usr/sbin/visudo -cf %s
+  
+- name: Install runner service
+  command: ./svc.sh install
+  args:
+    chdir: "{{ runner_dir }}"
+  when: not runner_configured.stat.exists
+
+- name: Start runner service
+  command: ./svc.sh start
+  args:
+    chdir: "{{ runner_dir }}"
+  when: not runner_configured.stat.exists
